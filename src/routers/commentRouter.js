@@ -1,9 +1,7 @@
 import express from 'express'
-import { commandGet } from '../controllers/commentController'
-const commandRouter = express.Router()
+import { commentGet } from '../controllers/commentController'
+const commentRouter = express.Router()
 
-commandRouter.get('/', commandGet)
-commandRouter.post('/', commandGet)
-commandRouter.delete('/')
+commentRouter.route('/').get(commentGet).post(commentGet).delete()
 
-export default commandRouter
+export default commentRouter

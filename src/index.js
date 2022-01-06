@@ -7,8 +7,9 @@ import commentRouter from './routers/commentRouter'
 const app    = express()
 const logger = morgan('dev')
 
-// View Engine Setting
-//app.set('view engine', 'pug')
+// post data
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(logger)
 app.use('/post', postRouter)
 app.use('/comment', commentRouter)

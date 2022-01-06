@@ -1,4 +1,7 @@
+import './db'
+import './models/post'
 import app from './index.js'
-const port = 8080
 
-app.listen(port, () => console.log(`Server Listen for ${port} port`))
+const PORT = 8080
+
+app.listen(PORT, () => console.log(`✔ Server Listen for ${PORT} port`))
