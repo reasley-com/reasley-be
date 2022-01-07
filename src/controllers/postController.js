@@ -1,13 +1,15 @@
 import postModel from '../models/post'
 
 export const postGet = async (req, res) => {
-    const args = req.params.type
-    console.log(args)
+    // 인자 기록 & 기본 값 세팅
+    let args = req.params
+    if ( !args.sort ) args.sort = 'asc'
+    if ( !args.keyword ) args.keyword = ''
 
     // 최신 글 리스트
-    if ( args == 'recently' ) {
+    if ( args.type == 'recently' ) {
         try {
-            const posts = await postModel.find({})
+            const posts = await postModel.find({}).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
             return res.json({ status: 200, result: posts })
         } catch {
             return res.json({ status: 500 })
@@ -15,18 +17,33 @@ export const postGet = async (req, res) => {
     }
 
     // 카테고리 글 리스트
-    if ( args == 'category' ) {
-        return res.json()
+    if ( args.type == 'category' ) {
+        try {
+            const posts = await postModel.find({ category: keyword }).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
+            return res.json({ status: 200, result: posts })
+        } catch {
+            return res.json({ status: 500 })
+        }
     }
 
     // 인기 글 리스트
-    if ( args == 'top' ) {
+    if ( args.type == 'top' ) {
+        
         return res.json()
     }
 
     // 검색 글 리스트
-    if ( args == 'search' ) {
-        return res.json()
+    if ( args.type == 'search' ) {
+        try {
+            const posts = await postModel.find({
+                $or:[
+                    {title: new RegExp(`${keyword}`, 'i')},
+                    {body: new RegExp(`${keyword}`, 'i')} ]
+                }).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
+            return res.json({ status: 200, result: posts })
+        } catch {
+            return res.json({ status: 500 })
+        }
     }
 
     // 단일 글 정보
@@ -34,13 +51,14 @@ export const postGet = async (req, res) => {
 }
 
 export const postAdd = async (req, res) => {
-    const { title, tag, category } = req.body
+    const { title, status, tag, category } = req.body
 
     try {
         await postModel.create({
             title,
             tag: tag.split(','),
             category,
+            status
         })
         return res.json({ status: 200 })
     } catch (err) {
