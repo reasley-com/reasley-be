@@ -3,13 +3,13 @@ import postModel from '../models/post'
 export const postGet = async (req, res) => {
     // 인자 기록 & 기본 값 세팅
     let args = req.params
-    if ( !args.sort ) args.sort = 'asc'
+    // if ( !args.sort ) args.sort = 'asc'
     if ( !args.keyword ) args.keyword = ''
 
     // 최신 글 리스트
     if ( args.type == 'recently' ) {
         try {
-            const posts = await postModel.find({}).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
+            const posts = await postModel.find({}).sort({ createAt: -1 })
             return res.json({ status: 200, result: posts })
         } catch {
             return res.json({ status: 500 })
@@ -19,7 +19,7 @@ export const postGet = async (req, res) => {
     // 카테고리 글 리스트
     if ( args.type == 'category' ) {
         try {
-            const posts = await postModel.find({ category: keyword }).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
+            const posts = await postModel.find({ category: args.keyword }).sort({ createAt:-1 })
             return res.json({ status: 200, result: posts })
         } catch {
             return res.json({ status: 500 })
@@ -37,9 +37,9 @@ export const postGet = async (req, res) => {
         try {
             const posts = await postModel.find({
                 $or:[
-                    {title: new RegExp(`${keyword}`, 'i')},
-                    {body: new RegExp(`${keyword}`, 'i')} ]
-                }).sort({ createAt: args.sort == 'asc' ? -1 : 1 })
+                    { title: new RegExp(`${args.keyword}`, 'i') },
+                    { category: new RegExp(`${args.keyword}`, 'i') } ]
+                }).sort({ createAt: -1 })
             return res.json({ status: 200, result: posts })
         } catch {
             return res.json({ status: 500 })
