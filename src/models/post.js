@@ -1,7 +1,8 @@
 import mongoose from 'mongoose'
+import getNextSequence from '../functions/getNextSequence'
 
 const postSchema = new mongoose.Schema({
-    seq: { type: String, required: true, unique: true },
+    seq: { type: Number, required: true },
     title: { type: String, required: true, maxLength: 50 },          // 제목
     body: { type: String, required: true },                          // 본문
     status: { type: Number, required: true },                        // 0 임시, 1 공개, 2 비공개, 3 비밀글
@@ -14,8 +15,9 @@ const postSchema = new mongoose.Schema({
 })
 
 // Middleware is must be configured before module creation
-postSchema.pre('save', async function () {
+postSchema.pre('save', async function (next) {
     console.log(this)
+    this.seq = await getNextSequence()
 })
 
 postSchema.pre('delete', async function () {
