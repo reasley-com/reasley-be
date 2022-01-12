@@ -10,17 +10,14 @@ const postSchema = new mongoose.Schema({
     createAt: { type: Date, required: true, default: Date.now() },   // 생성 일시
     editAt: { type: Date, required: true, default: Date.now() },     // 마지막 수정 일시
     views: { type: Number, required: true, default: 0 },             // 조회 수
-    category: { type: mongoose.ObjectId, required: true },           // 카테고리
-    comment: [{ type: String, default: [] }]                         // 댓글
+    category: { type: mongoose.ObjectId, required: true, ref: 'category' },           // 카테고리
+    comment: [{ type: String, default: [] }],                        // 댓글
+    password: { type: String, maxLength: 50 },                       // 패스워드 3번일 경우 동작
 })
 
 // Middleware is must be configured before module creation
 postSchema.pre('save', async function (next) {
     this.seq = await getNextSequence()
-    console.log(this)
-})
-
-postSchema.pre('delete', async function () {
     console.log(this)
 })
 

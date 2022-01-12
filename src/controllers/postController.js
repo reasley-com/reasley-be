@@ -1,18 +1,17 @@
+import categoryModel from '../models/category'
 import postModel from '../models/post'
 
 export const postGet = async (req, res) => {
     // 인자 기록 & 기본 값 세팅
     let args = req.params
 
-    if ( !args.keyword ) args.keyword = ''
-
     // 최신 글 리스트
     if ( args.type == 'recently' ) {
         try {
             const post = await postModel.find({}).sort({ createAt: -1 })
             return res.json({ status: 200, result: post })
-        } catch {
-            return res.json({ status: 500 })
+        } catch (err) {
+            return res.json({ status: 500, result: `Error: ${err._message}` })
         }
     }
 
@@ -53,29 +52,46 @@ export const postGet = async (req, res) => {
     // 단일 글 정보
     if ( args.type == 'single' ) {
         try {
-            const post = await postModel.find({ seq: args.keyword })
+            const post = await postModel.find({}).sort({ createAt: -1 })
             return res.json({ status: 200, result: post[0] })
         } catch {
             return res.json({ status: 500 })
         }
     }
+
     return res.json({ status: 500 })
 }
   
 export const postAdd = async (req, res) => {
-    const { title, status, body, tag, category } = req.body
+    // const { title, status, body, tag, category } = req.body
+    const data = req.body
+
+    const category = await categoryModel.findOne({
+        $or:[
+            { name: data.category },
+            { "childern.name": data.category }]
+    })
+
+    let categoryID
+    if ( category.name == data.category ) {
+        categoryID = category._id
+    } else {
+        categoryID = category.childern[category.childern.findIndex( (element) => element.name === data.category )]._id
+    }
+    console.log( categoryID )
 
     try {
         await postModel.create({
             seq: 0,
-            title,
-            body,
-            tag: tag.split(','),
-            category,
-            status
+            title: data.title,
+            body: data.body,
+            tag: data.tag.split(','),
+            category: categoryID,
+            status: data.status
         })
         return res.json({ status: 200 })
     } catch (err) {
+        console.log(err)
         return res.json({ status: 500, result: `Error: ${err._message}` })
     }
 }
@@ -89,6 +105,7 @@ export const postRemove = async (req, res) => {
         const deleteCount = await postModel.deleteMany({ seq: { $in: data.seq.map(Number) } })
         return res.json({ status: 200, result: deleteCount })
     } catch (err) {
+        console.log(err)
         return res.json({ status: 500, result: `Error: ${err._message}` })
     }
 }

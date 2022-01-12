@@ -5,15 +5,21 @@ export const categoryGet = async (req, res) => {
 
     if ( args.keyword != undefined ) {
         try {
-            const category = await categoryModel.findOne({ name: args.keyword })
+            const category = await categoryModel.findOne({
+                $or:[
+                    { name: args.keyword },
+                    { "childern.name": args.keyword }]
+            })
+
             return res.json({ status: 200, result: category })
-        } catch {
-            return res.json({ status: 500 })
+        } catch (err) {
+            console.log(err)
+            return res.json({ status: 500, result: `Error: ${err._message}` })
         }
     }
 
     try {
-        const category = await categoryModel.find({})
+        category = await categoryModel.find({})
         return res.json({ status: 200, result: category })
     } catch {
         return res.json({ status: 500 })
