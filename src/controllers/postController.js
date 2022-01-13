@@ -98,6 +98,29 @@ export const postAdd = async (req, res) => {
 
 
 
+
+
+export const postEdit = async (req, res) => {
+    let data = req.body
+
+    try {
+        const deleteCount = await postModel.findOneAndUpdate(
+            { seq: data.seq },
+            { 
+                title: data.title,
+                body: data.body,
+                tag: data.tag.split(','),
+                category: data.category,
+                status: data.status,
+            }
+        )
+        return res.json({ status: 200})
+    } catch (err) {
+        console.log(err)
+        return res.json({ status: 500, result: `Error: ${err._message}` })
+    }
+}
+
 export const postRemove = async (req, res) => {
     let data = req.body
 
