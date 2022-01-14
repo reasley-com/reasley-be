@@ -28,7 +28,7 @@ export const postGet = async (req, res) => {
     // 인기 글 리스트
     if ( args.type == 'top' ) {
         try {
-            const post = await postModel.find({ category: args.keyword }).sort({ createAt:-1 })
+            const post = await postModel.find({ category: args.keyword }).sort({ view:-1 })
             return res.json({ status: 200, result: post })
         } catch {
             return res.json({ status: 500 })
