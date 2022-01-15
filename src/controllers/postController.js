@@ -78,7 +78,6 @@ export const postAdd = async (req, res) => {
     } else {
         categoryID = category.childern[category.childern.findIndex( (element) => element.name === data.category )]._id
     }
-    console.log( categoryID )
 
     try {
         await postModel.create({

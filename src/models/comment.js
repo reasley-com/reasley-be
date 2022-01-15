@@ -3,11 +3,11 @@ import mongoose from 'mongoose'
 const commentSchema = new mongoose.Schema({
     nickname: { type: String, required: true, maxLength: 50 },
     body: { type: String, required: true, maxLength: 50 },
-    createAt: { type: String, required: true, maxLength: 50 },
-    editAt: { type: String, required: true, maxLength: 50 },
-    status: { type: String, required: true, maxLength: 50 },
-    comment: [{ type: String, default: [] }],
+    createAt: { type: Date, required: true, maxLength: 50, default: Date.now() },
+    editAt: { type: Date, required: true, maxLength: 50, default: Date.now() },
+    status: { type: Number, required: true, maxLength: 50 },
     password: { type: String, maxLength: 50 },
+    referenceID: { type: Number, required: true }
 })
 
 // Middleware is must be configured before module creation
