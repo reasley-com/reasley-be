@@ -52,7 +52,7 @@ export const postGet = async (req, res) => {
     // 단일 글 정보
     if ( args.type == 'single' ) {
         try {
-            const post = await postModel.find({}).sort({ createAt: -1 })
+            const post = await postModel.findOne({ seq: args.keyword })
             return res.json({ status: 200, result: post[0] })
         } catch {
             return res.json({ status: 500 })
