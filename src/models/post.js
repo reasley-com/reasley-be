@@ -11,7 +11,6 @@ const postSchema = new mongoose.Schema({
     editAt: { type: Date, required: true, default: Date.now() },     // 마지막 수정 일시
     views: { type: Number, required: true, default: 0 },             // 조회 수
     category: { type: mongoose.ObjectId, required: true, ref: 'category' },           // 카테고리
-    comment: [{ type: String, default: [] }],                        // 댓글
     password: { type: String, maxLength: 50 },                       // 패스워드 3번일 경우 동작
 })
 
