@@ -15,9 +15,8 @@ const postSchema = new mongoose.Schema({
 })
 
 // Middleware is must be configured before module creation
-postSchema.pre('save', async function (next) {
+postSchema.pre('save', async function () {
     this.seq = await getNextSequence()
-    console.log(this)
 })
 
 const postModel = mongoose.model('post', postSchema)
