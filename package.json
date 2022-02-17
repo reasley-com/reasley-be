@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon --exec npx babel-node src/init.js"
+    "start": "nodemon --exec npx babel-node src/init.js"
   },
   "repository": {
     "type": "git",
