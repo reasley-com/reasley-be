@@ -1,5 +1,8 @@
+const config = require('./config')
+
 import mongoose from 'mongoose'
-mongoose.connect('mongodb://127.0.0.1:27017/reasley')
+
+mongoose.connect(`mongodb://${config.REASLEY_DB}/reasley`)
 const db = mongoose.connection
 
 db.on('error', (error) => console.log('DB Error', error))
