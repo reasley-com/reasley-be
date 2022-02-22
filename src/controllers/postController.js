@@ -72,12 +72,11 @@ export const postAdd = async (req, res) => {
             { "childern.name": data.category }]
     })
 
+    if ( !category ) return res.json({ status: 500, result: `Error: None category` })
+
     let categoryID
-    if ( category.name == data.category ) {
-        categoryID = category._id
-    } else {
-        categoryID = category.childern[category.childern.findIndex( (element) => element.name === data.category )]._id
-    }
+    if ( category.name == data.category ) categoryID = category._id
+    else categoryID = category.childern[category.childern.findIndex( (element) => element.name === data.category )]._id
 
     try {
         await postModel.create({
@@ -113,7 +112,7 @@ export const postEdit = async (req, res) => {
                 status: data.status,
             }
         )
-        return res.json({ status: 200})
+        return res.json({ status: 200 })
     } catch (err) {
         console.log(err)
         return res.json({ status: 500, result: `Error: ${err._message}` })
