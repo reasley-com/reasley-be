@@ -101,6 +101,14 @@ export const postAdd = async (req, res) => {
 export const postEdit = async (req, res) => {
     let data = req.body
 
+    const category = await categoryModel.findOne({
+        $or:[
+            { _id: data.category },
+            { "childern._id": data.category }]
+    })
+
+    if ( !category ) return res.json({ status: 500, result: 'Error: None category' })
+
     try {
         const deleteCount = await postModel.findOneAndUpdate(
             { seq: data.seq },
